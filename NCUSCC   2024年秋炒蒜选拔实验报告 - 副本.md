@@ -60,15 +60,15 @@
 
 3.根据自己电脑配置选择合适的虚拟机配置并创建新的虚拟机（搭载Ubuntu22.04系统），为确保其可以联网，在下图所示的过程中选择NAT选项
 
-![4959c4a0-03b7-4110-8326-369934338f51](https://www.helloimg.com/i/2024/10/22/6717a79f924b7.png)
+![4959c4a0-03b7-4110-8326-369934338f51](https://www.helloimg.com/i/2024/10/22/6717a7ac72297.png)
 
 4.创建并安装完成后点击开始此虚拟机即可开始探索Ubuntu的世界
 
-![b714df88-0e8a-4506-946e-30eb19d60abf](https://www.helloimg.com/i/2024/10/22/6717a79f924b7.png)
+![b714df88-0e8a-4506-946e-30eb19d60abf](https://www.helloimg.com/i/2024/10/22/6717a7ac2ccd0.png)
 
 5.在Ubuntu系统中安装vscode，并下载合适的拓展包（如下图）
 
-![28ff7d04-21aa-405d-ba24-90fa36929b37](https://www.helloimg.com/i/2024/10/22/6717a79f2d9af.png
+![28ff7d04-21aa-405d-ba24-90fa36929b37](https://www.helloimg.com/i/2024/10/22/6717a79f2d9af.png)
 
 6.打开终端，输入sudu apt update更新包体
 
