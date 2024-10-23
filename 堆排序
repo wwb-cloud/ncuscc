@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define DATA_SIZE 10000000
+
+// 生成随机浮点数数组
+void generateRandomFloatArray(float *arr, int size) {
+    srand((unsigned int)time(NULL)); // 设置随机数生成的种子
+    for (int i = 0; i < size; i++) {
+        arr[i] = (float)rand() / RAND_MAX * 1000000.0f; // 生成 0 到 1000000 之间的随机浮点数
+    }
+}
+
+// 交换两个元素
+void swap(float *a, float *b) {
+    float temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// 堆化函数，确保节点 i 满足最大堆的性质
+void heapify(float arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    // 如果左子节点大于根节点
+    if (left < n && arr[left] > arr[largest]) {
+        largest = left;
+    }
+
+    // 如果右子节点大于当前最大节点
+    if (right < n && arr[right] > arr[largest]) {
+        largest = right;
+    }
+
+    // 如果最大节点不是根节点，交换它们，并继续堆化
+    if (largest != i) {
+        swap(&arr[i], &arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+// 堆排序函数
+void heapSort(float arr[], int n) {
+    // 建立最大堆
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+
+    // 从堆中提取最大元素，并重新堆化
+    for (int i = n - 1; i > 0; i--) {
+        // 将堆顶元素（最大值）与最后一个元素交换
+        swap(&arr[0], &arr[i]);
+        // 减小堆的大小，并重新堆化
+        heapify(arr, i, 0);
+    }
+}
+
+int main() {
+    float floatArray[DATA_SIZE];
+
+    // 生成随机浮点数数组
+    generateRandomFloatArray(floatArray, DATA_SIZE);
+
+    // 执行堆排序
+    heapSort(floatArray, DATA_SIZE);
+
+    // 程序结束，不需要输出
+    return 0;
+}
