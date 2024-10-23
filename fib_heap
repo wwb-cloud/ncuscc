@@ -1,0 +1,166 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define DATA_SIZE 1000000000
+
+typedef struct Node {
+    double key;
+    struct Node *parent;
+    struct Node *child;
+    struct Node *left;
+    struct Node *right;
+    int degree;
+    int mark;
+} Node;
+
+typedef struct {
+    Node *min;
+    int size;
+} FibonacciHeap;
+
+Node* createNode(double key) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->key = key;
+    node->parent = NULL;
+    node->child = NULL;
+    node->left = node;
+    node->right = node;
+    node->degree = 0;
+    node->mark = 0;
+    return node;
+}
+
+void insert(FibonacciHeap *heap, Node *node) {
+    node->left = node->right = node;
+    if (heap->min == NULL) {
+        heap->min = node;
+    } else {
+        node->right = heap->min;
+        node->left = heap->min->left;
+        heap->min->left->right = node;
+        heap->min->left = node;
+    }
+    heap->size++;
+}
+
+void cut(Node *x, Node *y) {
+    if (y->left == y->right) {
+        y->left = y->right = NULL;
+    } else {
+        if (y->left == x) {
+            y->left = x->right;
+        }
+        if (y->right == x) {
+            y->right = x->left;
+        }
+        x->left->right = x->right;
+        x->right->left = x->left;
+    }
+    x->left = x->right = x;
+    x->parent = NULL;
+}
+
+void cascadingCut(FibonacciHeap *heap, Node *x) {
+    Node *w = x->parent;
+    if (w == NULL) return;
+    x->mark = 0;
+    if (w->mark == 0) {
+        w->mark = 1;
+    } else {
+        w->mark = 0;
+        cascadingCut(heap, w);
+    }
+}
+
+void link(FibonacciHeap *heap, Node *y, Node *x) {
+    y->left = y->right = y;
+    if (heap->min == NULL) {
+        heap->min = y;
+    } else {
+        y->right = heap->min;
+        y->left = heap->min->left;
+        heap->min->left->right = y;
+        heap->min->left = y;
+    }
+    y->parent = NULL;
+    heap->size++;
+    y->degree = 0;
+}
+
+void heapify(FibonacciHeap *heap, Node *node) {
+    int degree = node->degree;
+    Node *arr[100];
+    int idx = 0;
+    for (Node *x = node->child; x != NULL; x = x->right) {
+        arr[idx++] = x;
+    }
+    for (int i = 0; i < idx; i++) {
+        Node *x = arr[i];
+        x->parent = NULL;
+        x->mark = 0;
+        heapify(heap, x);
+    }
+    Node *largest = node;
+    for (int i = 0; i < idx; i++) {
+        Node *x = arr[i];
+        if (x->key < largest->key) {
+            largest = x;
+        }
+    }
+    if (largest != node) {
+        cut(largest, node);
+        link(heap, largest, node);
+    }
+}
+
+Node* extractMin(FibonacciHeap *heap) {
+    if (heap->min == NULL) return NULL;
+    Node *minNode = heap->min;
+    Node *child = minNode->child;
+    if (child != NULL) {
+        child->parent = NULL;
+        child->left = child->right = child;
+        insert(heap, child);
+    }
+    if (minNode == minNode->right) {
+        heap->min = NULL;
+    } else {
+        heap->min = minNode->right;
+        Node *temp = heap->min->left;
+        temp->right = minNode->left;
+        minNode->left->left = temp;
+        minNode->left->right = heap->min;
+        heap->min->left = minNode->left;
+    }
+    heap->size--;
+    return minNode;
+}
+
+void fibonacciHeapSort(double *arr, int n) {
+    FibonacciHeap heap;
+    heap.min = NULL;
+    heap.size = 0;
+    for (int i = 0; i < n; i++) {
+        insert(&heap, createNode(arr[i]));
+    }
+    for (int i = 0; i < n; i++) {
+        Node *minNode = extractMin(&heap);
+        if (minNode) {
+            arr[i] = minNode->key;
+            free(minNode);
+        }
+    }
+}
+
+int main() {
+    double arr[DATA_SIZE];
+    srand((unsigned int)time(NULL));
+    for (int i = 0; i < DATA_SIZE; i++) {
+        arr[i] = (double)rand() / RAND_MAX * 10000000000.0;
+    }
+
+    fibonacciHeapSort(arr, DATA_SIZE);
+
+    return 0;
+}
