@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define ARRAY_SIZE 100000
+
+void generateRandomFloatArray(float *array, int size) {
+    srand((unsigned int)time(NULL));
+    for (int i = 0; i < size; i++) {
+        array[i] = (float)rand() / RAND_MAX * 100000.0f;
+    }
+}
+
+void bubbleSortDescending(float *array, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (array[j] < array[j + 1]) {
+                float temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    float array[ARRAY_SIZE];
+
+    // Generate random float array
+    generateRandomFloatArray(array, ARRAY_SIZE);
+
+    // Sort the array in descending order
+    bubbleSortDescending(array, ARRAY_SIZE);
+
+    // The sorted array is now in 'array', you can process or save it as needed
+
+    return 0;
+}
